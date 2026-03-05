@@ -1,0 +1,1 @@
+export { TextStylePlugin } from "./TextStylePlugin";
