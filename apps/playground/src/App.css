@@ -1,0 +1,42 @@
+.easy_lexical_test_container {
+    display: flex;
+    justify-content: center;
+    padding: 100px;
+}
+.easy_lexical_test_inner {
+    width: 100%;
+    max-width: 1056px;
+}
+.easy_lexical_test_title {
+    font-size: 40px;
+    font-weight: bold;
+}
+.easy_lexical_test_button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: #444444 solid 1px;
+    border-radius: 8px;
+    padding: 4px 16px;
+    width: fit-content;
+    font-size: 14px;
+
+    &.register {
+        background-color: #707070;
+        border-width: 4px;
+        color: white;
+    }
+}
+.easy_lexical_test_header {
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    z-index: 50;
+    height: fit-content;
+    padding: 16px 20px;
+    border-bottom: #444444 solid 1px;
+}

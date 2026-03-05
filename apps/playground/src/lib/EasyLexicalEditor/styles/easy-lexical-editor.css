@@ -1,0 +1,586 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+@import "resizable-table.css";
+@import "resizable-image.css";
+@import "editor-toast.css";
+@import "editor-loading.css";
+@import "editor-popovers.css";
+@import "editor-tooltip.css";
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #eee;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular',
+    sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.other h2 {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 7px;
+}
+
+.other a {
+    color: #777;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+.other ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+.ltr {
+    text-align: left;
+}
+
+.rtl {
+    text-align: right;
+}
+
+.editor-container {
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.editor-inner {
+    background: #fff;
+    position: relative;
+    overflow: auto;
+    flex-grow: 1;
+
+    &.not-found {
+        padding: 20px;
+        color: #ff4444;
+        font-weight: 600;
+        background-color: #f6f6f6;
+    }
+}
+
+.editor-inner p {
+    margin: 0;
+}
+
+.editor-input {
+    resize: none;
+    width: 100%;
+    min-height: 100%;
+    height: fit-content;
+    font-size: 15px;
+    caret-color: rgb(5, 5, 5);
+    position: relative;
+    tab-size: 1;
+    outline: 0;
+    padding: 15px 10px;
+    caret-color: #444;
+}
+
+.editor-placeholder {
+    color: #999;
+    overflow: hidden;
+    position: absolute;
+    text-overflow: ellipsis;
+    top: 15px;
+    left: 10px;
+    font-size: 15px;
+    user-select: none;
+    display: inline-block;
+    pointer-events: none;
+}
+
+.editor-text-bold {
+    font-weight: bold;
+}
+
+.editor-text-italic {
+    font-style: italic;
+}
+
+.editor-text-underline {
+    text-decoration: underline;
+}
+
+.editor-text-strikethrough {
+    text-decoration: line-through;
+}
+
+.editor-text-underlineStrikethrough {
+    text-decoration: underline line-through;
+}
+
+.editor-text-code {
+    background-color: rgb(240, 242, 245);
+    padding: 1px 0.25rem;
+    font-family: Menlo, Consolas, Monaco, monospace;
+    font-size: 94%;
+}
+
+.editor-link {
+    color: rgb(33, 111, 219);
+    text-decoration: none;
+}
+
+.tree-view-output {
+    display: block;
+    background: #222;
+    color: #fff;
+    padding: 5px;
+    font-size: 12px;
+    white-space: pre-wrap;
+    max-height: 250px;
+    position: relative;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow: auto;
+    line-height: 14px;
+}
+
+.editor-code {
+    background-color: rgb(240, 242, 245);
+    font-family: Menlo, Consolas, Monaco, monospace;
+    display: block;
+    padding: 8px 8px 8px 52px;
+    line-height: 1.53;
+    font-size: 13px;
+    margin: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    tab-size: 2;
+    /* white-space: pre; */
+    overflow-x: auto;
+    position: relative;
+}
+
+.editor-code:before {
+    content: attr(data-gutter);
+    position: absolute;
+    background-color: #eee;
+    left: 0;
+    top: 0;
+    border-right: 1px solid #ccc;
+    padding: 8px;
+    color: #777;
+    white-space: pre-wrap;
+    text-align: right;
+    min-width: 25px;
+}
+
+.editor-code:after {
+    content: attr(data-highlight-language);
+    top: 0;
+    right: 3px;
+    padding: 3px;
+    font-size: 10px;
+    text-transform: uppercase;
+    position: absolute;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.editor-tokenComment {
+    color: slategray;
+}
+
+.editor-tokenPunctuation {
+    color: #999;
+}
+
+.editor-tokenProperty {
+    color: #905;
+}
+
+.editor-tokenSelector {
+    color: #690;
+}
+
+.editor-tokenOperator {
+    color: #9a6e3a;
+}
+
+.editor-tokenAttr {
+    color: #07a;
+}
+
+.editor-tokenVariable {
+    color: #e90;
+}
+
+.editor-tokenFunction {
+    color: #dd4a68;
+}
+
+
+.editor-paragraph {
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.editor-container .text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.editor-quote {
+    margin: 12px 0;
+    padding-left: 12px;
+    border-left: 4px solid #e5e7eb;
+    color: #475569;
+    font-style: italic;
+    line-height: 1.6;
+}
+
+.editor-heading-h1 {
+    font-size: 32px;
+    line-height: 1.3;
+    font-weight: 700;
+    margin: 24px 0 16px;
+}
+
+.editor-heading-h2 {
+    font-size: 28px;
+    line-height: 1.35;
+    font-weight: 700;
+    margin: 20px 0 14px;
+}
+
+.editor-heading-h3 {
+    font-size: 24px;
+    line-height: 1.4;
+    font-weight: 600;
+    margin: 18px 0 12px;
+}
+
+.editor-heading-h4 {
+    font-size: 20px;
+    line-height: 1.45;
+    font-weight: 600;
+    margin: 16px 0 10px;
+}
+
+.editor-heading-h5 {
+    font-size: 18px;
+    line-height: 1.5;
+    font-weight: 500;
+    margin: 14px 0 8px;
+}
+
+.editor-heading-h6 {
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 500;
+    margin: 12px 0 6px;
+}
+
+.editor-list-ol {
+    padding: 0;
+    margin: 0;
+    margin-left: 16px;
+}
+
+.editor-list-ul {
+    padding: 0;
+    margin: 0;
+    margin-left: 16px;
+}
+
+.editor-listitem {
+    margin: 8px 32px 8px 32px;
+}
+
+.editor-nested-listitem {
+    list-style-type: none;
+}
+
+pre::-webkit-scrollbar {
+    background: transparent;
+    width: 10px;
+}
+
+pre::-webkit-scrollbar-thumb {
+    background: #999;
+}
+
+.debug-timetravel-panel {
+    overflow: hidden;
+    padding: 0 0 10px 0;
+    margin: auto;
+    display: flex;
+}
+
+.debug-timetravel-panel-slider {
+    padding: 0;
+    flex: 8;
+}
+
+.debug-timetravel-panel-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    flex: 1;
+    color: #fff;
+    font-size: 12px;
+}
+
+.debug-timetravel-panel-button:hover {
+    text-decoration: underline;
+}
+
+.debug-timetravel-button {
+    border: 0;
+    padding: 0;
+    font-size: 12px;
+    top: 10px;
+    right: 15px;
+    position: absolute;
+    background: none;
+    color: #fff;
+}
+
+.debug-timetravel-button:hover {
+    text-decoration: underline;
+}
+
+.toolbar-container {
+    background: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    position: relative;
+}
+
+.toolbar {
+    display: flex;
+    margin-bottom: 1px;
+    position: relative;
+    vertical-align: middle;
+    padding: 4px;
+    align-items: center;
+    gap: 0;
+
+    &.mirror {
+        position: absolute;
+        visibility: hidden;
+        pointer-events: none;
+        left: 0;
+        top: -99999px;
+        width: auto;
+        white-space: nowrap;
+    }
+}
+
+.editor-container button.toolbar-item {
+    border: 0;
+    display: flex;
+    background: none;
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.editor-container button.editor-block-type-area {
+    border: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    vertical-align: middle;
+    background-color: #f6f6f6;
+    width: 120px;
+    height: 30px;
+    position: relative;
+    margin: 0 4px;
+
+    &:hover:not([disabled]) {
+        background-color: #f6f6f6;
+    }
+}
+
+.editor-container button.toolbar-item:disabled {
+    cursor: not-allowed;
+}
+
+.editor-container button.toolbar-item.spaced {
+    margin-right: 2px;
+}
+
+.editor-container button.toolbar-item i.format {
+    background-size: contain;
+    height: 18px;
+    width: 18px;
+    margin-top: 2px;
+    vertical-align: -0.25em;
+    display: flex;
+    opacity: 0.6;
+}
+
+.editor-container button.toolbar-item:disabled i.format {
+    opacity: 0.2;
+}
+
+.editor-container button.toolbar-item.active {
+    background-color: rgba(223, 232, 250, 0.3);
+}
+
+.editor-container button.toolbar-item.active i {
+    opacity: 1;
+}
+
+.editor-container .toolbar-item:hover:not([disabled]) {
+    background-color: #eee;
+}
+
+
+
+.editor-container .divider {
+    width: 1px;
+    height: 16px;
+    background-color: #eee;
+    margin: 0 4px;
+}
+
+.editor-container .tb-group {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.editor-container .toolbar-item .text {
+    display: flex;
+    line-height: 20px;
+    width: 200px;
+    vertical-align: middle;
+    font-size: 14px;
+    color: #777;
+    text-overflow: ellipsis;
+    width: 70px;
+    overflow: hidden;
+    height: 20px;
+    text-align: left;
+}
+
+
+.editor-container .toolbar-item .icon {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    user-select: none;
+    margin-right: 8px;
+    line-height: 16px;
+    background-size: contain;
+}
+
+.editor-container .editor-select-box-chevron {
+    min-width: 14px;
+    width: 14px;
+    min-height: 14px;
+    height: 14px;
+    background-size: 100%;
+    transition: all 200ms ease-in-out;
+
+    &.open {
+        transform: rotate(180deg);
+    }
+}
+.editor-container button.toolbar-item.spaced.text-bg-color,
+.editor-container button.toolbar-item.spaced.text-color {
+    align-items: center;
+    position: relative;
+    max-height: 36px;
+}
+
+/* icons url */
+i.undo {
+    background-image: url(../assets/icons/arrow-counterclockwise.svg);
+}
+
+i.redo {
+    background-image: url(../assets/icons/arrow-clockwise.svg);
+}
+
+i.bold {
+    background-image: url(../assets/icons/type-bold.svg);
+}
+
+i.italic {
+    background-image: url(../assets/icons/type-italic.svg);
+}
+
+i.underline {
+    background-image: url(../assets/icons/type-underline.svg);
+}
+
+i.strikethrough {
+    background-image: url(../assets/icons/type-strikethrough.svg);
+}
+
+i.left-align {
+    background-image: url(../assets/icons/text-left.svg);
+}
+
+i.center-align {
+    background-image: url(../assets/icons/text-center.svg);
+}
+
+i.right-align {
+    background-image: url(../assets/icons/text-right.svg);
+}
+
+i.justify-align {
+    background-image: url(../assets/icons/justify.svg);
+}
+
+i.image-upload {
+    background-image: url(../assets/icons/image.svg);
+}
+
+i.video-upload {
+    background-image: url(../assets/icons/video-upload.svg);
+}
+
+i.more {
+    background-image: url(../assets/icons/three-dots.svg);
+}
+
+i.editor-select-box-chevron {
+    background-image: url(../assets/icons/chevron-down.svg);
+}
+
+i.text-bg-color {
+    background-image: url(../assets/icons/highlighter.svg);
+}
+
+/* 애니메이션 키프레임 */
+@keyframes loading_spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

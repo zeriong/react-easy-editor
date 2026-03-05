@@ -1,0 +1,47 @@
+/* speech-bubble의 위치를 일치화 시키기 위한 root variable */
+root { --arrow-x: 0; }
+
+/* 단일 툴팁 */
+.tb-tooltip {
+    position: absolute;
+    left: 0; top: 100%; /* 툴바 아래쪽에 표시 */
+    transform: translate(-50%, 8px); /* X는 JS로 셋팅한 left의 중앙 기준 */
+    background: #1f2937; /* slate-800 */
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
+    padding: 6px 8px;
+    border-radius: 8px;
+    white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(0,0,0,.15);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .12s ease;
+    z-index: 10;
+
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: var(--arrow-x, 50%);
+        width: 0;
+        height: 0;
+        border: 6px solid transparent;
+        border-bottom-color: #1f2937;
+        border-top: 0;
+        margin-left: -6px;
+        margin-top: -6px;
+    }
+}
+.tb-tooltip[data-show="1"] { opacity: 1; }
+
+.tb-tooltip__arrow {
+    position: absolute;
+    left: var(--arrow-x, 50%);
+    top: -6px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-bottom-color: #1f2937;
+}
