@@ -1,9 +1,10 @@
-import { useEditorStore } from "../lib/EasyLexicalEditor/store/editorStore.ts";
-import { toast } from "../lib/EasyLexicalEditor/instance/index.ts";
+import { useEditorStore, useToastStore } from "react-easy-editor";
 import { useEffect, useState } from "react";
 
 import type { LexicalEditor } from "lexical";
-import type { EditorLocale } from "../lib/EasyLexicalEditor/store/editorStore.ts";
+import type { EditorLocale } from "react-easy-editor";
+
+const toast = useToastStore.getState().addToast;
 
 interface TestHeaderProps {
   onSubmit: () => void;

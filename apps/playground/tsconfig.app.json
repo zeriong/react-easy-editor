@@ -23,5 +23,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/lib", "src/plugins", "src/components/EasyLexicalEditor.tsx"]
 }

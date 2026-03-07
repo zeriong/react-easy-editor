@@ -1,0 +1,1 @@
+export { AlignmentPlugin } from "./AlignmentPlugin";
