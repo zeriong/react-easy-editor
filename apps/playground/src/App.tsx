@@ -19,7 +19,9 @@ function App() {
   const editorRef = useRef<LexicalEditor | null>(null);
 
   const [contentList, setContentList] = useState<string[]>([]);
-  const [getEditorProps, setGetEditorProps] = useState<EditorProps | null>(null);
+  const [getEditorProps, setGetEditorProps] = useState<EditorProps | null>(
+    null,
+  );
 
   function allClear() {
     setContentList([]);
@@ -38,7 +40,9 @@ function App() {
     });
   }
 
-  const uploadEditorImageFilePastIpo = async (file: File): Promise<string | null> => {
+  const uploadEditorImageFilePastIpo = async (
+    file: File,
+  ): Promise<string | null> => {
     const formData = new FormData();
     const imgRes = await fetch(URL.createObjectURL(file));
     const blobFile = await imgRes.blob();
@@ -94,7 +98,10 @@ function App() {
 
           {contentList?.map((content, idx) => {
             return (
-              <div key={"editor_content_" + idx} dangerouslySetInnerHTML={{ __html: content }} />
+              <div
+                key={"editor_content_" + idx}
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
             );
           })}
         </div>
