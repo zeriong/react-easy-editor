@@ -23,33 +23,9 @@ importers:
 
   apps/playground:
     dependencies:
-      '@lexical/html':
-        specifier: 0.34.0
-        version: 0.34.0
-      '@lexical/list':
-        specifier: 0.34.0
-        version: 0.34.0
       '@lexical/react':
         specifier: 0.34.0
         version: 0.34.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(yjs@13.6.29)
-      '@lexical/rich-text':
-        specifier: 0.34.0
-        version: 0.34.0
-      '@lexical/selection':
-        specifier: 0.34.0
-        version: 0.34.0
-      '@lexical/table':
-        specifier: 0.34.0
-        version: 0.34.0
-      '@lexical/utils':
-        specifier: 0.34.0
-        version: 0.34.0
-      dompurify:
-        specifier: ^3.2.6
-        version: 3.3.1
-      framer-motion:
-        specifier: ^12.23.12
-        version: 12.35.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       lexical:
         specifier: 0.34.0
         version: 0.34.0
@@ -59,9 +35,9 @@ importers:
       react-dom:
         specifier: ^19.1.0
         version: 19.2.0(react@19.2.0)
-      zustand:
-        specifier: ^5.0.8
-        version: 5.0.11(@types/react@19.2.2)(react@19.2.0)
+      react-easy-editor:
+        specifier: workspace:*
+        version: link:../../packages/react-easy-editor
     devDependencies:
       '@eslint/js':
         specifier: ^9.30.1
