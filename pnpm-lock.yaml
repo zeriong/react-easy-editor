@@ -264,6 +264,40 @@ importers:
         specifier: ^5.8.0
         version: 5.8.3
 
+  packages/table:
+    dependencies:
+      '@react-easy-editor/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@lexical/react':
+        specifier: 0.34.0
+        version: 0.34.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(yjs@13.6.29)
+      '@lexical/selection':
+        specifier: 0.34.0
+        version: 0.34.0
+      '@lexical/table':
+        specifier: 0.34.0
+        version: 0.34.0
+      '@lexical/utils':
+        specifier: 0.34.0
+        version: 0.34.0
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.2.2
+      lexical:
+        specifier: 0.34.0
+        version: 0.34.0
+      react:
+        specifier: ^19.1.0
+        version: 19.2.0
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(postcss@8.5.8)(typescript@5.8.3)
+      typescript:
+        specifier: ^5.8.0
+        version: 5.8.3
+
   packages/text-color:
     dependencies:
       '@react-easy-editor/core':

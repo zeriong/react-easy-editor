@@ -28,6 +28,9 @@ export { parseCssRules, mergeStyles, cleanExcelText } from "./utils/cssInline";
 // Constants
 export { VIDEO_REGEXP, IMAGE_REG_EXP } from "./constants/regExp";
 
+// Built-in Plugins
+export { CaretColorPlugin } from "./plugins/CaretColorPlugin";
+
 // Components
 export { default as LoadingCover } from "./components/LoadingCover";
 export { Toasts } from "./components/Toasts";

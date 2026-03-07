@@ -36,6 +36,7 @@ import { useToastStore } from "./store/toastStore";
 
 import LoadingCover from "./components/LoadingCover";
 import { Toasts } from "./components/Toasts";
+import { CaretColorPlugin } from "./plugins/CaretColorPlugin";
 
 import { EditorProvider } from "./EditorContext";
 import { ToolbarProvider } from "./ToolbarContext";
@@ -269,6 +270,9 @@ export function ReactEasyEditor({
             <OnChangePlugin onChange={handleChange} />
             <HistoryPlugin />
             {autoFocus && <AutoFocusPlugin />}
+
+            {/* Built-in plugins */}
+            <CaretColorPlugin />
 
             {/* Render plugin components */}
             {plugins.map(
