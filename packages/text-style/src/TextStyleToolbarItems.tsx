@@ -9,7 +9,8 @@ import {
 import { useEditorLocale } from "@react-easy-editor/core";
 
 import type { ToolbarRenderProps } from "@react-easy-editor/core";
-import type { ReactNode, TextFormatType } from "react";
+import type { TextFormatType } from "lexical";
+import type { ReactNode } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  Inline SVG icons (Bootstrap Icons style)                           */
