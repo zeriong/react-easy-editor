@@ -17,6 +17,6 @@ export function TablePlugin(): PluginConfig {
       priority: 3,
       render: InsertTableToolbarItem,
     },
-    component: TablePluginComponent as any,
+    component: TablePluginComponent,
   };
 }

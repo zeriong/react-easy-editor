@@ -37,10 +37,10 @@ function moveNativeCaretToPoint(editor: LexicalEditor, x: number, y: number): vo
   const doc = root.ownerDocument || document;
 
   let range: Range | null = null;
-  if (typeof (doc as any).caretRangeFromPoint === "function") {
-    range = (doc as any).caretRangeFromPoint(x, y) as Range | null;
-  } else if (typeof (doc as any).caretPositionFromPoint === "function") {
-    const pos = (doc as any).caretPositionFromPoint(x, y) as {
+  if ("caretRangeFromPoint" in doc && typeof doc.caretRangeFromPoint === "function") {
+    range = doc.caretRangeFromPoint(x, y) as Range | null;
+  } else if ("caretPositionFromPoint" in doc && typeof doc.caretPositionFromPoint === "function") {
+    const pos = doc.caretPositionFromPoint(x, y) as {
       offsetNode: Node;
       offset: number;
     } | null;
@@ -206,13 +206,13 @@ export function ImagePluginComponent({ editor }: { editor: LexicalEditor }) {
               }
             }
 
-            if (!(original && original.getType?.() === "image")) return;
+            if (!(original instanceof ImageNode)) return;
 
             const payload = {
-              src: (original as any).__src as string,
-              alt: (original as any).__alt as string,
-              width: (original as any).__width as number,
-              height: (original as any).__height as number,
+              src: original.__src,
+              alt: original.__alt,
+              width: original.__width,
+              height: original.__height,
             };
 
             $insertInlineImageAtSelection(payload);
@@ -275,11 +275,8 @@ export function ImagePluginComponent({ editor }: { editor: LexicalEditor }) {
         editor.update(
           () => {
             const n = $getNodeByKey(key);
-            if (n && (n instanceof ImageNode || n.getType?.() === "image")) {
-              (n as unknown as { setSize: (w: number, h: number) => void }).setSize(
-                width,
-                height,
-              );
+            if (n instanceof ImageNode) {
+              n.setSize(width, height);
             }
           },
           { discrete: true },

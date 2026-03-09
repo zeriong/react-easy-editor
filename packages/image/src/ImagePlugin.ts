@@ -17,6 +17,6 @@ export function ImagePlugin(): PluginConfig {
       priority: 1,
       render: InsertImageToolbarItem,
     },
-    component: ImagePluginComponent as any,
+    component: ImagePluginComponent,
   };
 }

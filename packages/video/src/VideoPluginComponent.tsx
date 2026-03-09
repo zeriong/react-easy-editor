@@ -7,7 +7,7 @@ import {
   COMMAND_PRIORITY_EDITOR,
   COMMAND_PRIORITY_LOW,
 } from "lexical";
-import { useEditorContext } from "@react-easy-editor/core";
+// Note: useEditorContext available for future video paste/DnD support
 
 import { VideoNode } from "./VideoNode";
 import { UPDATE_VIDEO_SIZE_COMMAND } from "./VideoComponent";
@@ -20,8 +20,6 @@ import type { LexicalEditor } from "lexical";
 /* ------------------------------------------------------------------ */
 
 export function VideoPluginComponent({ editor }: { editor: LexicalEditor }) {
-  const { saveServerFetcher } = useEditorContext();
-
   /* ---- Resize update command handler ---- */
 
   useEffect(() => {
@@ -31,11 +29,8 @@ export function VideoPluginComponent({ editor }: { editor: LexicalEditor }) {
         editor.update(
           () => {
             const n = $getNodeByKey(key);
-            if (n && (n instanceof VideoNode || n.getType?.() === "video")) {
-              (n as unknown as { setSize: (w: number, h: number) => void }).setSize(
-                width,
-                height,
-              );
+            if (n instanceof VideoNode) {
+              n.setSize(width, height);
             }
           },
           { discrete: true },

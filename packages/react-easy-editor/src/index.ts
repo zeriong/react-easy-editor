@@ -27,6 +27,8 @@ export {
   parseAllowedColor,
   styleStringToObject,
   clearRefTimeout,
+  getNodeStyle,
+  setNodeStyle,
   toBase64,
   whitelistStylesExportDOM,
   buildInlineStyleImportMap,
@@ -51,6 +53,7 @@ export type {
   ToolbarRenderProps,
   ToolbarGroup,
   EditorLocale,
+  EasyEditorInstance,
   ToastAPI,
   EditorContextValue,
 } from "@react-easy-editor/core";

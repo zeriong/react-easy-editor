@@ -8,7 +8,6 @@ import {
 import {
   INSERT_TABLE_COMMAND,
   $createTableNodeWithDimensions,
-  TableNode,
 } from "@lexical/table";
 import { TablePlugin as LexicalTablePlugin } from "@lexical/react/LexicalTablePlugin";
 

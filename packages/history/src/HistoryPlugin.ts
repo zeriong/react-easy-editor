@@ -17,6 +17,6 @@ export function HistoryPlugin(): PluginConfig {
         render: RedoToolbarItem,
       },
     ],
-    component: HistoryPluginComponent as any,
+    component: HistoryPluginComponent,
   };
 }

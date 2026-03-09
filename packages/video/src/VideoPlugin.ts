@@ -17,6 +17,6 @@ export function VideoPlugin(): PluginConfig {
       priority: 2,
       render: InsertVideoToolbarItem,
     },
-    component: VideoPluginComponent as any,
+    component: VideoPluginComponent,
   };
 }
