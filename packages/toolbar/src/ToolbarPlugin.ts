@@ -4,6 +4,6 @@ import { ToolbarContainer } from "./ToolbarContainer";
 export function ToolbarPlugin(): PluginConfig {
   return {
     name: "toolbar",
-    component: ToolbarContainer as any,
+    component: ToolbarContainer,
   };
 }
