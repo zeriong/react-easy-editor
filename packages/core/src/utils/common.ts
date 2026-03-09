@@ -57,6 +57,22 @@ export function getNodeStyle(node: unknown): string | null {
   return null;
 }
 
+/**
+ * Safely sets the inline style string on a Lexical node.
+ * Lexical's ElementNode / TextNode has `setStyle()` but the type is not always exposed.
+ * This utility provides a type-safe way to call it without `as unknown as` casts.
+ */
+export function setNodeStyle(node: unknown, style: string): void {
+  if (
+    node != null &&
+    typeof node === "object" &&
+    "setStyle" in node &&
+    typeof (node as Record<string, unknown>).setStyle === "function"
+  ) {
+    (node as { setStyle: (s: string) => void }).setStyle(style);
+  }
+}
+
 export function toBase64(file: File): Promise<string | ArrayBuffer | null> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

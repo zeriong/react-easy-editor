@@ -6,9 +6,9 @@ import {
   COMMAND_PRIORITY_LOW,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
+import { $createHeadingNode, $createQuoteNode, $isHeadingNode } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
-import { useEditorLocale, PopoverBox, BLOCK_INLINE_STYLES } from "@react-easy-editor/core";
+import { useEditorLocale, PopoverBox, BLOCK_INLINE_STYLES, setNodeStyle } from "@react-easy-editor/core";
 
 import type { ToolbarRenderProps } from "@react-easy-editor/core";
 import type { HeadingTagType } from "@lexical/rich-text";
@@ -68,9 +68,9 @@ export function BlockTypeToolbarItem({ editor }: ToolbarRenderProps): ReactNode 
         anchorNode.getKey() === "root" ? anchorNode : anchorNode.getTopLevelElementOrThrow();
 
       const type = element.getType();
-      if (type === "heading" && typeof (element as Record<string, unknown>).getTag === "function") {
+      if ($isHeadingNode(element)) {
         const targetTag = BLOCK_TYPE_LIST.find(
-          (v) => v.value === (element as unknown as { getTag: () => string }).getTag(),
+          (v) => v.value === element.getTag(),
         );
         if (targetTag) {
           setBlockType(targetTag);
@@ -92,22 +92,16 @@ export function BlockTypeToolbarItem({ editor }: ToolbarRenderProps): ReactNode 
         $setBlocksType(selection, () => {
           if (value === "paragraph") {
             const node = $createParagraphNode();
-            (node as unknown as { setStyle: (s: string) => void }).setStyle(
-              BLOCK_INLINE_STYLES[value] || "",
-            );
+            setNodeStyle(node, BLOCK_INLINE_STYLES[value] || "");
             return node;
           }
           if (value === "quote") {
             const node = $createQuoteNode();
-            (node as unknown as { setStyle: (s: string) => void }).setStyle(
-              BLOCK_INLINE_STYLES[value] || "",
-            );
+            setNodeStyle(node, BLOCK_INLINE_STYLES[value] || "");
             return node;
           }
           const node = $createHeadingNode(value as HeadingTagType);
-          (node as unknown as { setStyle: (s: string) => void }).setStyle(
-            BLOCK_INLINE_STYLES[value] || "",
-          );
+          setNodeStyle(node, BLOCK_INLINE_STYLES[value] || "");
           return node;
         });
 

@@ -20,7 +20,7 @@ export { useEditorStore } from "./store/editorStore";
 export { useToastStore } from "./store/toastStore";
 
 // Utils
-export { parseAllowedFontSize, parseAllowedColor, styleStringToObject, clearRefTimeout, getNodeStyle, toBase64 } from "./utils/common";
+export { parseAllowedFontSize, parseAllowedColor, styleStringToObject, clearRefTimeout, getNodeStyle, setNodeStyle, toBase64 } from "./utils/common";
 export { whitelistStylesExportDOM } from "./utils/editorExporter";
 export { buildInlineStyleImportMap } from "./utils/editorImporter";
 export { parseCssRules, mergeStyles, cleanExcelText } from "./utils/cssInline";
