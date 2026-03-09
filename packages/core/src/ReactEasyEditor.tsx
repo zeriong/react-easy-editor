@@ -43,7 +43,7 @@ import { ToolbarProvider } from "./ToolbarContext";
 
 import type { LexicalEditor, EditorState, SerializedEditorState, Klass, LexicalNode, DOMExportOutput } from "lexical";
 import type { CSSProperties } from "react";
-import type { PluginConfig, ToolbarItemConfig, EditorLocale } from "./types";
+import type { PluginConfig, ToolbarItemConfig, EditorLocale, EasyEditorInstance } from "./types";
 
 type ExportFn = (editor: LexicalEditor, target: LexicalNode) => DOMExportOutput;
 
@@ -210,7 +210,7 @@ export function ReactEasyEditor({
   function registerEditorInstance(editor: LexicalEditor) {
     if (editor) {
       editorRef.current = editor;
-      (editorRef.current as unknown as { resetContent: () => void }).resetContent = () => {
+      (editorRef.current as EasyEditorInstance).resetContent = () => {
         editorRef.current!.update(() => {
           const root = $getRoot();
           root.clear();

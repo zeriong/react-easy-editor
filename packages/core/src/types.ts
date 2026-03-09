@@ -3,6 +3,10 @@ import type { ReactNode } from "react";
 
 export type EditorLocale = "en" | "kr" | "ja";
 
+export interface EasyEditorInstance extends LexicalEditor {
+  resetContent: () => void;
+}
+
 export interface ToastAPI {
   (message: string | ReactNode): void;
   success: (message: string | ReactNode) => void;

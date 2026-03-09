@@ -40,6 +40,23 @@ export function clearRefTimeout(timeoutRef: MutableRefObject<ReturnType<typeof s
   }
 }
 
+/**
+ * Safely retrieves the inline style string from a Lexical node.
+ * Lexical's TextNode has `getStyle()` but the type is not always exposed.
+ * This utility provides a type-safe way to access it without `as unknown as` casts.
+ */
+export function getNodeStyle(node: unknown): string | null {
+  if (
+    node != null &&
+    typeof node === "object" &&
+    "getStyle" in node &&
+    typeof (node as Record<string, unknown>).getStyle === "function"
+  ) {
+    return (node as { getStyle: () => string }).getStyle();
+  }
+  return null;
+}
+
 export function toBase64(file: File): Promise<string | ArrayBuffer | null> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

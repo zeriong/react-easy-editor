@@ -1,4 +1,5 @@
 import { BLOCK_INLINE_STYLES } from "../theme";
+import { getNodeStyle } from "./common";
 import { isHTMLElement } from "lexical";
 import DOMPurify from "dompurify";
 
@@ -23,7 +24,7 @@ export const whitelistStylesExportDOM = (editor: LexicalEditor, target: LexicalN
       output.element.removeAttribute("dir");
     }
 
-    let nodeStyle = (target as unknown as { getStyle?: () => string }).getStyle?.();
+    let nodeStyle = getNodeStyle(target);
 
     if (!nodeStyle) {
       const key = TAG_STYLE_KEY_MAP[output.element.tagName];

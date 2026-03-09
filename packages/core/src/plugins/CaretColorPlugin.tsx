@@ -7,6 +7,7 @@ import {
 } from "lexical";
 
 import { useEditorContext } from "../EditorContext";
+import { getNodeStyle } from "../utils/common";
 
 const DEFAULT_CARET_COLOR = "#444";
 
@@ -25,11 +26,7 @@ function extractColorFromStyle(styleStr: string | null): string | null {
  * Returns null if the node does not support `getStyle` or has no color set.
  */
 function getNodeColor(node: unknown): string | null {
-  const styledNode = node as { getStyle?: () => string };
-  if (typeof styledNode.getStyle === "function") {
-    return extractColorFromStyle(styledNode.getStyle());
-  }
-  return null;
+  return extractColorFromStyle(getNodeStyle(node));
 }
 
 /**

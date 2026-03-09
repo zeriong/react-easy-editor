@@ -1,5 +1,5 @@
 // Types
-export type { PluginConfig, ToolbarItemConfig, ToolbarRenderProps, ToolbarGroup, EditorLocale, ToastAPI } from "./types";
+export type { PluginConfig, ToolbarItemConfig, ToolbarRenderProps, ToolbarGroup, EditorLocale, EasyEditorInstance, ToastAPI } from "./types";
 
 // Context
 export { EditorProvider, useEditorContext } from "./EditorContext";
@@ -20,7 +20,7 @@ export { useEditorStore } from "./store/editorStore";
 export { useToastStore } from "./store/toastStore";
 
 // Utils
-export { parseAllowedFontSize, parseAllowedColor, styleStringToObject, clearRefTimeout, toBase64 } from "./utils/common";
+export { parseAllowedFontSize, parseAllowedColor, styleStringToObject, clearRefTimeout, getNodeStyle, toBase64 } from "./utils/common";
 export { whitelistStylesExportDOM } from "./utils/editorExporter";
 export { buildInlineStyleImportMap } from "./utils/editorImporter";
 export { parseCssRules, mergeStyles, cleanExcelText } from "./utils/cssInline";
