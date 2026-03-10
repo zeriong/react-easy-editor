@@ -17,7 +17,7 @@ const GROUP_ORDER: ToolbarGroup[] = ["undo", "style", "color", "block", "align",
 
 interface GroupDef {
   key: string;
-  nodes: ReactNode[];
+  items: ToolbarItemConfig[];
 }
 
 interface GroupProps {
@@ -36,7 +36,7 @@ function Group({ children }: GroupProps) {
   );
 }
 
-function buildGroups(items: ToolbarItemConfig[], editor: LexicalEditor): GroupDef[] {
+function buildGroups(items: ToolbarItemConfig[]): GroupDef[] {
   const map = new Map<ToolbarGroup, ToolbarItemConfig[]>();
 
   for (const item of items) {
@@ -53,16 +53,9 @@ function buildGroups(items: ToolbarItemConfig[], editor: LexicalEditor): GroupDe
     const list = map.get(groupKey);
     if (!list || list.length === 0) continue;
 
-    // Sort items within group by priority
-    const sorted = [...list].sort((a, b) => a.priority - b.priority);
-
     groups.push({
       key: groupKey,
-      nodes: sorted.map((item, idx) => (
-        <span key={`${groupKey}-${idx}`}>
-          {item.render({ editor })}
-        </span>
-      )),
+      items: [...list].sort((a, b) => a.priority - b.priority),
     });
   }
 
@@ -77,8 +70,8 @@ export function ToolbarContainer({ editor }: { editor: LexicalEditor }) {
   const activeEditor = editor || editorCtx.editor;
 
   const groups = useMemo(
-    () => buildGroups(items, activeEditor),
-    [items, activeEditor],
+    () => buildGroups(items),
+    [items],
   );
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -186,7 +179,14 @@ export function ToolbarContainer({ editor }: { editor: LexicalEditor }) {
       <div className="toolbar" ref={containerRef} role="toolbar">
         {visible.map((g, i) => (
           <Group key={g.key}>
-            {g.nodes}
+            {g.items.map((item, idx) => {
+              const Render = item.render;
+              return (
+                <span key={`${g.key}-${idx}`}>
+                  <Render editor={activeEditor} />
+                </span>
+              );
+            })}
             {i !== visible.length - 1 && <Divider />}
           </Group>
         ))}
@@ -206,7 +206,16 @@ export function ToolbarContainer({ editor }: { editor: LexicalEditor }) {
             {showPopover && hasOverflow && (
               <div role="menu" className="toolbar-popover">
                 {overflow.map((g) => (
-                  <Group key={`ov-${g.key}`}>{g.nodes}</Group>
+                  <Group key={`ov-${g.key}`}>
+                    {g.items.map((item, idx) => {
+                      const Render = item.render;
+                      return (
+                        <span key={`ov-${g.key}-${idx}`}>
+                          <Render editor={activeEditor} />
+                        </span>
+                      );
+                    })}
+                  </Group>
                 ))}
               </div>
             )}
@@ -218,7 +227,14 @@ export function ToolbarContainer({ editor }: { editor: LexicalEditor }) {
       <div ref={measureRef} aria-hidden="true" className="toolbar mirror">
         {groups.map((g) => (
           <Group key={`m-${g.key}`}>
-            {g.nodes}
+            {g.items.map((item, idx) => {
+              const Render = item.render;
+              return (
+                <span key={`m-${g.key}-${idx}`}>
+                  <Render editor={activeEditor} />
+                </span>
+              );
+            })}
           </Group>
         ))}
 

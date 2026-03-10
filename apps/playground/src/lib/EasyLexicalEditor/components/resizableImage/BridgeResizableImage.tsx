@@ -12,7 +12,14 @@ interface BridgeResizableImageProps {
   height: number | undefined;
 }
 
-export default function BridgeResizableImage({ editor, nodeKey, src, alt, width, height }: BridgeResizableImageProps) {
+export default function BridgeResizableImage({
+  editor,
+  nodeKey,
+  src,
+  alt,
+  width,
+  height,
+}: BridgeResizableImageProps) {
   return (
     <ResizableImage
       src={src}
