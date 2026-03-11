@@ -7,34 +7,12 @@ import {
   COMMAND_PRIORITY_LOW,
 } from "lexical";
 import { $patchStyleText } from "@lexical/selection";
-import { useEditorLocale, FadeAnimate } from "@react-easy-editor/core";
-import { ColorPicker, DEFAULT_BG_COLORS } from "./ColorPicker";
+import { useEditorLocale, FadeAnimate, HighlighterIcon, ChevronDownIcon } from "@react-easy-editor/core";
+import { DEFAULT_BG_COLORS } from "./ColorPicker";
 import { extractStyleValue } from "./extractStyleValue";
 
 import type { ToolbarRenderProps } from "@react-easy-editor/core";
 import type { ReactNode } from "react";
-
-/* ------------------------------------------------------------------ */
-/*  Background color icon (Bootstrap Icons style highlighter)          */
-/* ------------------------------------------------------------------ */
-
-function BgColorIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-    >
-      <path
-        fillRule="evenodd"
-        d="M11.096.644a2 2 0 0 1 2.791.036l1.433 1.433a2 2 0 0 1 .035 2.791L5.203 15.56a2 2 0 0 1-1.286.6l-2.82.314a1 1 0 0 1-1.072-1.072l.314-2.82a2 2 0 0 1 .6-1.286L11.096.644zm1.06 1.06L2.004 11.856a1 1 0 0 0-.3.643l-.233 2.094 2.094-.233a1 1 0 0 0 .643-.3L14.36 3.904a1 1 0 0 0-.018-1.395L12.91 1.076a1 1 0 0 0-1.396-.018l.643.646z"
-      />
-    </svg>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  BgColorToolbarItem                                                 */
@@ -178,7 +156,7 @@ export function createBgColorToolbarItem(options: BgColorToolbarItemOptions = {}
         onClick={applyPreviewBgToSelection}
       >
         <div className="text-setting bg-color">
-          <BgColorIcon />
+          <HighlighterIcon />
           <div ref={previewBoxRef} className="color-preview" />
         </div>
 
@@ -188,14 +166,26 @@ export function createBgColorToolbarItem(options: BgColorToolbarItemOptions = {}
             e.stopPropagation();
             setIsPopoverOpen((prev) => !prev);
           }}
-        />
+        >
+          <ChevronDownIcon width={12} height={12} />
+        </div>
 
         <FadeAnimate className="text-bg-color-popover" isVisible={isPopoverOpen}>
-          <ColorPicker
-            colors={colors}
-            onSelectColor={updateBgColor}
-            className="text-bg-color-grid"
-          />
+          {colors.map((c, i) => {
+            const isTransparent = c === "transparent";
+            return (
+              <div
+                key={`text_bg_color_${i}`}
+                className="color-preview-box"
+                onClick={() => updateBgColor(c)}
+              >
+                <div
+                  className={`color-preview-box-el${isTransparent ? " transparent" : ""}`}
+                  style={{ backgroundColor: c }}
+                />
+              </div>
+            );
+          })}
         </FadeAnimate>
       </button>
     );

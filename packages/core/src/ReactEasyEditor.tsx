@@ -6,8 +6,6 @@
  *
  */
 
-import "./styles/easy-lexical-editor.css";
-
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
@@ -15,6 +13,7 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import { TreeView } from "@lexical/react/LexicalTreeView";
 
 import {
   $createParagraphNode,
@@ -32,6 +31,7 @@ import { BasicTheme } from "./theme";
 import { buildInlineStyleImportMap } from "./utils/editorImporter";
 import { whitelistStylesExportDOM } from "./utils/editorExporter";
 import { clearRefTimeout } from "./utils/common";
+import { useEditorStore } from "./store/editorStore";
 import { useToastStore } from "./store/toastStore";
 
 import LoadingCover from "./components/LoadingCover";
@@ -40,6 +40,7 @@ import { CaretColorPlugin } from "./plugins/CaretColorPlugin";
 
 import { EditorProvider } from "./EditorContext";
 import { ToolbarProvider } from "./ToolbarContext";
+import { LOCALE } from "./locale";
 
 import type { LexicalEditor, EditorState, SerializedEditorState, Klass, LexicalNode, DOMExportOutput } from "lexical";
 import type { CSSProperties } from "react";
@@ -64,10 +65,9 @@ const BASE_NODES: Klass<LexicalNode>[] = [
 const GROUP_ORDER: Record<string, number> = {
   undo: 0,
   style: 1,
-  color: 2,
+  align: 2,
   block: 3,
-  align: 4,
-  media: 5,
+  media: 4,
 };
 
 interface ReactEasyEditorProps {
@@ -90,23 +90,28 @@ interface ReactEasyEditorProps {
   onReady?: (editor: LexicalEditor) => void;
   language?: EditorLocale;
   autoFocus?: boolean;
+  devTools?: boolean;
 }
 
 export function ReactEasyEditor({
   plugins = [],
-  placeholder = "Enter your content...",
+  placeholder,
   onChange,
   editorInnerStyle,
   editorInnerWidth,
   editorInnerHeight = "500px",
   saveServerFetcher,
   toastShowingDuration,
-  uploadFailMessage = "Upload failed. Please contact your administrator.",
+  uploadFailMessage,
   isToastAutoHidden,
   onReady,
   language = "en",
   autoFocus = true,
+  devTools = false,
 }: ReactEasyEditorProps) {
+  // Resolve locale-aware defaults
+  const resolvedPlaceholder = placeholder ?? LOCALE[language]?.placeholder ?? "Enter your content...";
+  const resolvedUploadFailMessage = uploadFailMessage ?? LOCALE[language]?.uploadFail ?? "Upload failed. Please contact your administrator.";
   // Collect nodes from all plugins and merge with base nodes
   const allNodes = useMemo(() => {
     const pluginNodes = plugins.flatMap((p) => p.nodes || []);
@@ -200,7 +205,7 @@ export function ReactEasyEditor({
       }
     } catch (e) {
       console.error("save server error: ", e);
-      toast.warn(uploadFailMessage);
+      toast.warn(resolvedUploadFailMessage);
       return null;
     } finally {
       setIsLoading(false);
@@ -242,6 +247,11 @@ export function ReactEasyEditor({
     checkReady();
   }, []);
 
+  // Sync language prop to global store so external components (e.g. TestHeader) can read it
+  useEffect(() => {
+    useEditorStore.getState().setLocale(language);
+  }, [language]);
+
   const editorContextValue = useMemo(
     () =>
       editorRef.current
@@ -274,15 +284,14 @@ export function ReactEasyEditor({
             {/* Built-in plugins */}
             <CaretColorPlugin />
 
-            {/* Render plugin components */}
-            {plugins.map(
-              (plugin) =>
-                plugin.component && (
-                  <plugin.component key={plugin.name} editor={editorRef.current!} />
-                ),
-            )}
-
             <div className="editor-container">
+              {/* Render plugin components (toolbar, etc.) inside editor-container for CSS scoping */}
+              {plugins.map(
+                (plugin) =>
+                  plugin.component && (
+                    <plugin.component key={plugin.name} editor={editorRef.current!} />
+                  ),
+              )}
               <div
                 className="editor-inner"
                 style={{
@@ -295,8 +304,8 @@ export function ReactEasyEditor({
                   contentEditable={
                     <ContentEditable
                       className="editor-input"
-                      aria-placeholder={placeholder}
-                      placeholder={<div className="editor-placeholder">{placeholder}</div>}
+                      aria-placeholder={resolvedPlaceholder}
+                      placeholder={<div className="editor-placeholder">{resolvedPlaceholder}</div>}
                     />
                   }
                   ErrorBoundary={LexicalErrorBoundary}
@@ -306,6 +315,18 @@ export function ReactEasyEditor({
 
                 <Toasts showingDuration={toastShowingDuration} isAutoHidden={isToastAutoHidden} />
               </div>
+
+              {devTools && editorRef.current && (
+                <TreeView
+                  viewClassName="tree-view-output"
+                  treeTypeButtonClassName="debug-treetype-button"
+                  timeTravelPanelClassName="debug-timetravel-panel"
+                  timeTravelButtonClassName="debug-timetravel-button"
+                  timeTravelPanelSliderClassName="debug-timetravel-panel-slider"
+                  timeTravelPanelButtonClassName="debug-timetravel-panel-button"
+                  editor={editorRef.current}
+                />
+              )}
             </div>
           </ToolbarProvider>
         </EditorProvider>

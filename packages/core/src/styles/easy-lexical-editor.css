@@ -6,10 +6,18 @@
  *
  */
 
+@import "resizable-table.css";
 @import "editor-toast.css";
 @import "editor-loading.css";
 @import "editor-popovers.css";
 @import "editor-tooltip.css";
+
+.editor-container,
+.editor-container *,
+.editor-container *::before,
+.editor-container *::after {
+    box-sizing: border-box;
+}
 
 .ltr {
     text-align: left;
@@ -346,7 +354,8 @@ pre::-webkit-scrollbar-thumb {
     margin-right: 2px;
 }
 
-.editor-container button.toolbar-item i.format {
+.editor-container button.toolbar-item i.format,
+.editor-container button.toolbar-item > svg {
     background-size: contain;
     height: 18px;
     width: 18px;
@@ -356,7 +365,8 @@ pre::-webkit-scrollbar-thumb {
     opacity: 0.6;
 }
 
-.editor-container button.toolbar-item:disabled i.format {
+.editor-container button.toolbar-item:disabled i.format,
+.editor-container button.toolbar-item:disabled > svg {
     opacity: 0.2;
 }
 
@@ -364,7 +374,8 @@ pre::-webkit-scrollbar-thumb {
     background-color: rgba(223, 232, 250, 0.3);
 }
 
-.editor-container button.toolbar-item.active i {
+.editor-container button.toolbar-item.active i,
+.editor-container button.toolbar-item.active > svg {
     opacity: 1;
 }
 
@@ -409,15 +420,22 @@ pre::-webkit-scrollbar-thumb {
 }
 
 .editor-container .editor-select-box-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-width: 14px;
     width: 14px;
     min-height: 14px;
     height: 14px;
-    background-size: 100%;
     transition: all 200ms ease-in-out;
 
     &.open {
         transform: rotate(180deg);
+    }
+
+    & svg {
+        width: 100%;
+        height: 100%;
     }
 }
 

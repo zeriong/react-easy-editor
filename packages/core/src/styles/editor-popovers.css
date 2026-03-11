@@ -89,13 +89,25 @@
     background-size: 100%;
     transition: all 200ms ease-in-out;
   }
+
+  & svg {
+    display: block;
+    min-width: 14px;
+    width: 14px;
+    min-height: 14px;
+    height: 14px;
+  }
 }
 
 .editor-container .text-setting-popover-button {
-  background-size: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 12px;
   height: 24px;
   border: 1px solid rgba(92, 92, 92, 0.3);
+  background: white;
+  cursor: pointer;
 }
 .text-bg-color-popover,
 .text-color-popover {

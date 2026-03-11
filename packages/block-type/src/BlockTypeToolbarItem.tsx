@@ -8,7 +8,7 @@ import {
 } from "lexical";
 import { $createHeadingNode, $createQuoteNode, $isHeadingNode } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
-import { useEditorLocale, PopoverBox, BLOCK_INLINE_STYLES, setNodeStyle } from "@react-easy-editor/core";
+import { useEditorLocale, FadeAnimate, BLOCK_INLINE_STYLES, setNodeStyle, ChevronDownIcon } from "@react-easy-editor/core";
 
 import type { ToolbarRenderProps } from "@react-easy-editor/core";
 import type { HeadingTagType } from "@lexical/rich-text";
@@ -30,29 +30,6 @@ const BLOCK_TYPE_LIST: BlockTypeItem[] = [
   { label: "H6", value: "h6", className: "editor-heading-h6" },
   { label: "Quote", value: "quote", className: "editor-quote" },
 ];
-
-function ChevronIcon({ isOpen }: { isOpen: boolean }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="12"
-      height="12"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-      style={{
-        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-        transition: "transform 0.2s ease",
-        marginLeft: "4px",
-      }}
-    >
-      <path
-        fillRule="evenodd"
-        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-      />
-    </svg>
-  );
-}
 
 export function BlockTypeToolbarItem({ editor }: ToolbarRenderProps): ReactNode {
   const { t } = useEditorLocale();
@@ -131,8 +108,20 @@ export function BlockTypeToolbarItem({ editor }: ToolbarRenderProps): ReactNode 
     };
   }, [editor, updateToolbar]);
 
+  useEffect(() => {
+    function handlePopover({ target }: MouseEvent) {
+      if (!(target as HTMLElement)?.classList?.contains("editor-block-type-area")) {
+        setIsPopover(false);
+      }
+    }
+    window.addEventListener("click", handlePopover);
+    return () => {
+      window.removeEventListener("click", handlePopover);
+    };
+  }, []);
+
   return (
-    <div style={{ position: "relative" }}>
+    <>
       <button
         aria-label={t("Block Type")}
         className="toolbar-item editor-block-type-area"
@@ -141,33 +130,29 @@ export function BlockTypeToolbarItem({ editor }: ToolbarRenderProps): ReactNode 
           setIsPopover(!isPopover);
         }}
       >
-        <span className="text-ellipsis">{t(blockType.label)}</span>
-        <ChevronIcon isOpen={isPopover} />
-      </button>
+        <div className="text-ellipsis">{t(blockType.label)}</div>
+        <span className={`editor-select-box-chevron ${isPopover ? "open" : ""}`}>
+          <ChevronDownIcon width={14} height={14} />
+        </span>
 
-      <PopoverBox>
-        {isPopover && (
-          <div className="editor-block-type-popover">
-            {BLOCK_TYPE_LIST.map((item) => {
-              const { className, value, label } = item;
-              return (
-                <div
-                  key={value}
-                  onClick={() => {
-                    setBlock(item);
-                    setIsPopover(false);
-                  }}
-                  className={className}
-                  role="option"
-                  aria-selected={blockType.value === value}
-                >
-                  {t(label)}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </PopoverBox>
-    </div>
+        <FadeAnimate className="editor-block-type-popover" isVisible={isPopover}>
+          {BLOCK_TYPE_LIST.map((item) => {
+            const { className, value, label } = item;
+            return (
+              <div
+                key={value}
+                onClick={() => {
+                  setBlock(item);
+                  setIsPopover(false);
+                }}
+                className={className}
+              >
+                {t(label)}
+              </div>
+            );
+          })}
+        </FadeAnimate>
+      </button>
+    </>
   );
 }

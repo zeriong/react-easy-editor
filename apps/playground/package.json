@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "react-easy-editor": "workspace:*",
+    "@react-easy-editor/core": "workspace:*",
     "@lexical/react": "0.34.0",
     "lexical": "0.34.0",
     "react": "^19.1.0",

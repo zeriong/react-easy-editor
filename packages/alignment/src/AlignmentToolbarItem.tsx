@@ -1,269 +1,125 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 import {
   $getSelection,
   $isRangeSelection,
-  $isElementNode,
-  COMMAND_PRIORITY_LOW,
   FORMAT_ELEMENT_COMMAND,
-  SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import { useEditorLocale, PopoverBox } from "@react-easy-editor/core";
+import {
+  useEditorLocale,
+  getNodeStyle,
+  setNodeStyle,
+  TextLeftIcon,
+  TextCenterIcon,
+  TextRightIcon,
+  JustifyIcon,
+} from "@react-easy-editor/core";
 
 import type { ToolbarRenderProps } from "@react-easy-editor/core";
 import type { ElementFormatType } from "lexical";
 import type { ReactNode } from "react";
 
 /* ------------------------------------------------------------------ */
-/*  Alignment types                                                    */
+/*  Alignment toolbar — 4 inline buttons matching origin               */
 /* ------------------------------------------------------------------ */
 
-type AlignmentType = "left" | "center" | "right" | "justify";
-
-const ALIGNMENT_OPTIONS: AlignmentType[] = ["left", "center", "right", "justify"];
-
-const ALIGNMENT_LABEL_MAP: Record<AlignmentType, string> = {
-  left: "Left Align",
-  center: "Center Align",
-  right: "Right Align",
-  justify: "Justify Align",
-};
-
-/* ------------------------------------------------------------------ */
-/*  Inline SVG icons (Bootstrap Icons style)                           */
-/* ------------------------------------------------------------------ */
-
-function AlignLeftIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-    >
-      <path
-        fillRule="evenodd"
-        d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
-      />
-    </svg>
-  );
-}
-
-function AlignCenterIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-    >
-      <path
-        fillRule="evenodd"
-        d="M4 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
-      />
-    </svg>
-  );
-}
-
-function AlignRightIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-    >
-      <path
-        fillRule="evenodd"
-        d="M6 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
-      />
-    </svg>
-  );
-}
-
-function AlignJustifyIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-    >
-      <path
-        fillRule="evenodd"
-        d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
-      />
-    </svg>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Icon map                                                           */
-/* ------------------------------------------------------------------ */
-
-const ALIGNMENT_ICON_MAP: Record<AlignmentType, () => ReactNode> = {
-  left: AlignLeftIcon,
-  center: AlignCenterIcon,
-  right: AlignRightIcon,
-  justify: AlignJustifyIcon,
-};
-
-/* ------------------------------------------------------------------ */
-/*  Hook: track current element alignment                              */
-/* ------------------------------------------------------------------ */
-
-function useCurrentAlignment(editor: ToolbarRenderProps["editor"]): AlignmentType {
-  const [alignment, setAlignment] = useState<AlignmentType>("left");
-
-  const updateAlignment = useCallback(() => {
-    editor.getEditorState().read(() => {
-      const selection = $getSelection();
-      if (!$isRangeSelection(selection)) return;
-
-      const anchorNode = selection.anchor.getNode();
-      const element = anchorNode.getTopLevelElementOrThrow();
-
-      if ($isElementNode(element)) {
-        const formatType = element.getFormatType();
-        if (formatType === "left" || formatType === "center" || formatType === "right" || formatType === "justify") {
-          setAlignment(formatType);
-        } else {
-          setAlignment("left");
-        }
-      }
+function upsertStyleProp(styleStr: string, key: string, value: string): string {
+  const map: Record<string, string> = {};
+  (styleStr || "")
+    .split(";")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .forEach((pair) => {
+      const idx = pair.indexOf(":");
+      if (idx === -1) return;
+      const k = pair.slice(0, idx).trim().toLowerCase();
+      const v = pair.slice(idx + 1).trim();
+      map[k] = v;
     });
-  }, [editor]);
 
-  useEffect(() => {
-    return editor.registerCommand(
-      SELECTION_CHANGE_COMMAND,
-      () => {
-        updateAlignment();
-        return false;
-      },
-      COMMAND_PRIORITY_LOW,
-    );
-  }, [editor, updateAlignment]);
+  if (!value) {
+    delete map[key];
+  } else {
+    map[key] = value;
+  }
 
-  useEffect(() => {
-    return editor.registerUpdateListener(({ editorState }) => {
-      editorState.read(() => {
+  return Object.keys(map)
+    .sort()
+    .map((k) => `${k}: ${map[k]}`)
+    .join("; ");
+}
+
+export function AlignmentToolbarItem({ editor }: ToolbarRenderProps): ReactNode {
+  const { t } = useEditorLocale();
+
+  const setAlign = useCallback(
+    (align: string) => {
+      editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, align as ElementFormatType);
+
+      editor.update(() => {
         const selection = $getSelection();
         if (!$isRangeSelection(selection)) return;
 
-        const anchorNode = selection.anchor.getNode();
-        const element = anchorNode.getTopLevelElementOrThrow();
+        const topBlocks = new Map<string, ReturnType<typeof selection.anchor.getNode>>();
 
-        if ($isElementNode(element)) {
-          const formatType = element.getFormatType();
-          if (formatType === "left" || formatType === "center" || formatType === "right" || formatType === "justify") {
-            setAlignment(formatType);
-          } else {
-            setAlignment("left");
-          }
+        if (selection.isCollapsed()) {
+          const anchor = selection.anchor.getNode();
+          const top = anchor.getTopLevelElementOrThrow?.();
+          if (top) topBlocks.set(top.getKey(), top);
+        } else {
+          selection.getNodes().forEach((n) => {
+            const top = n.getTopLevelElementOrThrow?.();
+            if (top && !topBlocks.has(top.getKey())) {
+              topBlocks.set(top.getKey(), top);
+            }
+          });
         }
+
+        topBlocks.forEach((block) => {
+          const prev = getNodeStyle(block);
+          if (prev !== null) {
+            const next = upsertStyleProp(prev, "text-align", align);
+            setNodeStyle(block, next);
+          }
+        });
       });
-    });
-  }, [editor]);
-
-  return alignment;
-}
-
-/* ------------------------------------------------------------------ */
-/*  Toolbar render function                                            */
-/* ------------------------------------------------------------------ */
-
-export function AlignmentToolbarItem({ editor }: ToolbarRenderProps): ReactNode {
-  const currentAlignment = useCurrentAlignment(editor);
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const { t } = useEditorLocale();
-
-  const handleAlign = useCallback(
-    (align: AlignmentType) => {
-      editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, align as ElementFormatType);
-      setIsOpen(false);
     },
     [editor],
   );
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen]);
-
-  const CurrentIcon = ALIGNMENT_ICON_MAP[currentAlignment];
-
   return (
-    <div ref={dropdownRef} style={{ position: "relative", display: "inline-block" }}>
+    <>
       <button
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => setAlign("left")}
         className="toolbar-item spaced"
-        aria-label={t(ALIGNMENT_LABEL_MAP[currentAlignment])}
-        data-tooltip={t(ALIGNMENT_LABEL_MAP[currentAlignment])}
+        aria-label={t("Left Align")}
+        data-tooltip={t("Left Align")}
       >
-        <CurrentIcon />
-        <span className="toolbar-item-chevron">
-          <ChevronDownIcon />
-        </span>
+        <TextLeftIcon />
       </button>
-
-      {isOpen && (
-        <PopoverBox>
-          {ALIGNMENT_OPTIONS.map((align) => {
-            const Icon = ALIGNMENT_ICON_MAP[align];
-            return (
-              <button
-                key={align}
-                onClick={() => handleAlign(align)}
-                className={"toolbar-item spaced " + (currentAlignment === align ? "active" : "")}
-                aria-label={t(ALIGNMENT_LABEL_MAP[align])}
-                data-tooltip={t(ALIGNMENT_LABEL_MAP[align])}
-              >
-                <Icon />
-              </button>
-            );
-          })}
-        </PopoverBox>
-      )}
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Chevron icon                                                       */
-/* ------------------------------------------------------------------ */
-
-function ChevronDownIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="10"
-      height="10"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-    >
-      <path
-        fillRule="evenodd"
-        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-      />
-    </svg>
+      <button
+        onClick={() => setAlign("center")}
+        className="toolbar-item spaced"
+        aria-label={t("Center Align")}
+        data-tooltip={t("Center Align")}
+      >
+        <TextCenterIcon />
+      </button>
+      <button
+        onClick={() => setAlign("right")}
+        className="toolbar-item spaced"
+        aria-label={t("Right Align")}
+        data-tooltip={t("Right Align")}
+      >
+        <TextRightIcon />
+      </button>
+      <button
+        onClick={() => setAlign("justify")}
+        className="toolbar-item"
+        aria-label={t("Justify Align")}
+        data-tooltip={t("Justify Align")}
+      >
+        <JustifyIcon />
+      </button>
+    </>
   );
 }

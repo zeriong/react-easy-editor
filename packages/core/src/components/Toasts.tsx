@@ -2,8 +2,15 @@ import { useToastStore } from "../store/toastStore";
 import { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import { clearRefTimeout } from "../utils/common";
+import { ToastSuccessIcon, ToastErrorIcon, ToastWarnIcon } from "../icons";
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
+
+const TOAST_ICON_MAP: Record<string, () => ReactNode> = {
+  success: ToastSuccessIcon,
+  error: ToastErrorIcon,
+  warn: ToastWarnIcon,
+};
 
 interface ToastsProps {
   containerStyle?: CSSProperties;
@@ -111,7 +118,9 @@ export const Toasts = ({ containerStyle = {}, showingDuration = 5000, isAutoHidd
     >
       {toastStore.toasts.length >= 0 && (
         <div className="editor-toast-content-wrapper">
-          <i className={iconClassName} />
+          <span className="editor-toast-icon">
+            {TOAST_ICON_MAP[iconClassName]?.() ?? null}
+          </span>
           <div
             className="editor-toast-content"
             dangerouslySetInnerHTML={{

@@ -15,13 +15,13 @@ export function TextColorPlugin(options: TextColorPluginOptions = {}): PluginCon
     name: "text-color",
     toolbar: [
       {
-        group: "color",
-        priority: 1,
+        group: "block",
+        priority: 2,
         render: createFontColorToolbarItem(options.fontColor),
       },
       {
-        group: "color",
-        priority: 2,
+        group: "block",
+        priority: 3,
         render: createBgColorToolbarItem(options.bgColor),
       },
     ],

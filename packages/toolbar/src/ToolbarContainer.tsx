@@ -6,14 +6,14 @@
  * ResizeObserver with a "More" overflow button.
  */
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useEditorContext, useToolbarItems } from "@react-easy-editor/core";
+import { useEditorContext, useToolbarItems, ThreeDotsIcon } from "@react-easy-editor/core";
 import useToolbarSingleTooltip from "./useToolbarSingleTooltip";
 
 import type { ReactNode } from "react";
 import type { ToolbarGroup, ToolbarItemConfig } from "@react-easy-editor/core";
 import type { LexicalEditor } from "lexical";
 
-const GROUP_ORDER: ToolbarGroup[] = ["undo", "style", "color", "block", "align", "media"];
+const GROUP_ORDER: ToolbarGroup[] = ["undo", "style", "align", "block", "media"];
 
 interface GroupDef {
   key: string;
@@ -200,7 +200,7 @@ export function ToolbarContainer({ editor }: { editor: LexicalEditor }) {
               aria-label="More"
               onClick={() => setShowPopover((s) => !s)}
             >
-              <i className="format more"></i>
+              <ThreeDotsIcon />
             </button>
 
             {showPopover && hasOverflow && (
@@ -241,7 +241,7 @@ export function ToolbarContainer({ editor }: { editor: LexicalEditor }) {
         <Divider />
 
         <button ref={moreBtnMeasureRef} className="toolbar-item spaced">
-          <i className="format more"></i>
+          <ThreeDotsIcon />
         </button>
       </div>
     </div>

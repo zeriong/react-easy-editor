@@ -14,7 +14,7 @@ export interface ToastAPI {
   error: (message: string | ReactNode) => void;
 }
 
-export type ToolbarGroup = "undo" | "style" | "color" | "block" | "align" | "media";
+export type ToolbarGroup = "undo" | "style" | "block" | "align" | "media";
 
 export interface ToolbarRenderProps {
   editor: LexicalEditor;

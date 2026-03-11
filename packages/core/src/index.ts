@@ -1,3 +1,6 @@
+// Styles (side-effect import ensures CSS is loaded)
+import "./styles/easy-lexical-editor.css";
+
 // Types
 export type { PluginConfig, ToolbarItemConfig, ToolbarRenderProps, ToolbarGroup, EditorLocale, EasyEditorInstance, ToastAPI } from "./types";
 
@@ -36,3 +39,31 @@ export { default as LoadingCover } from "./components/LoadingCover";
 export { Toasts } from "./components/Toasts";
 export { default as FadeAnimate } from "./components/FadeAnimate";
 export { PopoverBox } from "./components/PopoverBox";
+
+// Icons (Bootstrap Icons - MIT License)
+export {
+  ArrowCounterclockwiseIcon,
+  ArrowClockwiseIcon,
+  TypeBoldIcon,
+  TypeItalicIcon,
+  TypeUnderlineIcon,
+  TypeStrikethroughIcon,
+  FontsIcon,
+  HighlighterIcon,
+  TextLeftIcon,
+  TextCenterIcon,
+  TextRightIcon,
+  JustifyIcon,
+  TextParagraphIcon,
+  JournalTextIcon,
+  ChevronDownIcon,
+  ImageIcon,
+  VideoUploadIcon,
+  CameraVideoIcon,
+  TableIcon,
+  ThreeDotsIcon,
+  LoadingSpinnerIcon,
+  ToastSuccessIcon,
+  ToastErrorIcon,
+  ToastWarnIcon,
+} from "./icons";

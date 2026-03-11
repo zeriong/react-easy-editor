@@ -1,0 +1,42 @@
+.lex-table-overlay {
+    position: absolute;
+    pointer-events: none;
+    border: 2px solid transparent;
+    border-radius: 2px;
+    z-index: 10;
+}
+
+.lex-table-edit-toolbar-wrapper {
+    width: 100%;
+    position: absolute;
+    right: 20px;
+    z-index: 11;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+
+.lex-table-edit-toolbar {
+    pointer-events: auto;
+    position: absolute;
+    display: none;
+    padding: 6px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    border: 1px solid #e5e7eb;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1;
+    color: #111827;
+    width: fit-content;
+}
+
+.lex-table-edit-toolbar-button {
+    font-size: 12px;
+    padding: 6px 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+}

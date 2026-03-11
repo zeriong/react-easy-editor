@@ -7,31 +7,12 @@ import {
   COMMAND_PRIORITY_LOW,
 } from "lexical";
 import { $patchStyleText } from "@lexical/selection";
-import { useEditorLocale, FadeAnimate } from "@react-easy-editor/core";
-import { ColorPicker, DEFAULT_TEXT_COLORS } from "./ColorPicker";
+import { useEditorLocale, FadeAnimate, ChevronDownIcon } from "@react-easy-editor/core";
+import { DEFAULT_TEXT_COLORS } from "./ColorPicker";
 import { extractStyleValue } from "./extractStyleValue";
 
 import type { ToolbarRenderProps } from "@react-easy-editor/core";
 import type { ReactNode } from "react";
-
-/* ------------------------------------------------------------------ */
-/*  Font color icon (Bootstrap Icons style "A" with color bar)         */
-/* ------------------------------------------------------------------ */
-
-function FontColorIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-    >
-      <path d="M8.637 1.276a.24.24 0 0 0-.474 0L4.106 13h1.308l1.27-3.666h2.632L10.586 13h1.308L8.637 1.276zM8.4 3.58l1.263 4.254H7.137L8.4 3.58z" />
-    </svg>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  FontColorToolbarItem                                               */
@@ -191,7 +172,7 @@ export function createFontColorToolbarItem(options: FontColorToolbarItemOptions 
         onClick={applyPreviewColorToSelection}
       >
         <div className="text-setting text-color">
-          <FontColorIcon />
+          <span style={{ fontWeight: "500", fontSize: "15px" }}>A</span>
           <div ref={previewBoxRef} className="color-preview" />
         </div>
 
@@ -201,14 +182,20 @@ export function createFontColorToolbarItem(options: FontColorToolbarItemOptions 
             e.stopPropagation();
             setIsPopoverOpen((prev) => !prev);
           }}
-        />
+        >
+          <ChevronDownIcon width={12} height={12} />
+        </div>
 
         <FadeAnimate className="text-color-popover" isVisible={isPopoverOpen}>
-          <ColorPicker
-            colors={colors}
-            onSelectColor={updateTextColor}
-            className="text-color-grid"
-          />
+          {colors.map((c, i) => (
+            <div
+              key={`text_color_${i}`}
+              className="color-preview-box"
+              onClick={() => updateTextColor(c)}
+            >
+              <div className="color-preview-box-el" style={{ backgroundColor: c }} />
+            </div>
+          ))}
         </FadeAnimate>
       </button>
     );
