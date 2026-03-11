@@ -7,7 +7,7 @@ import {
   COMMAND_PRIORITY_LOW,
 } from "lexical";
 import { $patchStyleText } from "@lexical/selection";
-import { useEditorLocale, FadeAnimate, HighlighterIcon, ChevronDownIcon } from "@react-easy-editor/core";
+import { useEditorLocale, FadeAnimate, HighlighterIcon } from "@react-easy-editor/core";
 import { DEFAULT_BG_COLORS } from "./ColorPicker";
 import { extractStyleValue } from "./extractStyleValue";
 
@@ -82,7 +82,6 @@ export function createBgColorToolbarItem(options: BgColorToolbarItemOptions = {}
           }
         });
         setPreviewColor(backgroundColor);
-        setIsPopoverOpen(false);
       },
       [editor, setPreviewColor],
     );
@@ -106,23 +105,23 @@ export function createBgColorToolbarItem(options: BgColorToolbarItemOptions = {}
       });
     }, [editor]);
 
-    /* Close popover on outside click */
+    /* Popover toggle via global click handler (matching origin pattern) */
     useEffect(() => {
-      function handleClick(e: MouseEvent) {
-        const target = e.target as HTMLElement;
-        if (!target) return;
+      function handleTextBgPopover(e: MouseEvent) {
+        const cls = (e.target as HTMLElement)?.classList;
+        if (!cls) return;
 
-        const popover = target.closest(".text-bg-color-popover");
-        if (popover) return;
+        if (cls.contains("text-color-popover")) return;
 
-        const button = target.closest(".toolbar-item.text-bg-color");
-        if (button) return;
-
-        setIsPopoverOpen(false);
+        if (cls.contains("text-setting-popover-button") && cls.contains("text-bg-color")) {
+          setIsPopoverOpen(true);
+        } else {
+          setIsPopoverOpen(false);
+        }
       }
 
-      window.addEventListener("click", handleClick);
-      return () => window.removeEventListener("click", handleClick);
+      window.addEventListener("click", handleTextBgPopover);
+      return () => window.removeEventListener("click", handleTextBgPopover);
     }, []);
 
     /* Track selection changes to update preview color */
@@ -160,15 +159,7 @@ export function createBgColorToolbarItem(options: BgColorToolbarItemOptions = {}
           <div ref={previewBoxRef} className="color-preview" />
         </div>
 
-        <div
-          className="text-setting-popover-button text-bg-color"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsPopoverOpen((prev) => !prev);
-          }}
-        >
-          <ChevronDownIcon width={12} height={12} />
-        </div>
+        <div className="text-setting-popover-button text-bg-color" />
 
         <FadeAnimate className="text-bg-color-popover" isVisible={isPopoverOpen}>
           {colors.map((c, i) => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
-  COMMAND_PRIORITY_CRITICAL,
+  COMMAND_PRIORITY_LOW,
   REDO_COMMAND,
   UNDO_COMMAND,
 } from "lexical";
@@ -26,7 +26,7 @@ export function UndoToolbarItem({ editor }: ToolbarRenderProps): ReactNode {
         setCanUndo(payload);
         return false;
       },
-      COMMAND_PRIORITY_CRITICAL,
+      COMMAND_PRIORITY_LOW,
     );
   }, [editor]);
 
@@ -54,7 +54,7 @@ export function RedoToolbarItem({ editor }: ToolbarRenderProps): ReactNode {
         setCanRedo(payload);
         return false;
       },
-      COMMAND_PRIORITY_CRITICAL,
+      COMMAND_PRIORITY_LOW,
     );
   }, [editor]);
 

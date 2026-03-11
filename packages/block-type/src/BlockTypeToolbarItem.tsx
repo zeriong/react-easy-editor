@@ -141,10 +141,7 @@ export function BlockTypeToolbarItem({ editor }: ToolbarRenderProps): ReactNode 
             return (
               <div
                 key={value}
-                onClick={() => {
-                  setBlock(item);
-                  setIsPopover(false);
-                }}
+                onClick={() => setBlock(item)}
                 className={className}
               >
                 {t(label)}

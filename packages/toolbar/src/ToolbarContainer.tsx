@@ -5,7 +5,7 @@
  * dynamically grouped. Supports responsive packing/unpacking via
  * ResizeObserver with a "More" overflow button.
  */
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useEditorContext, useToolbarItems, ThreeDotsIcon } from "@react-easy-editor/core";
 import useToolbarSingleTooltip from "./useToolbarSingleTooltip";
 
@@ -182,9 +182,9 @@ export function ToolbarContainer({ editor }: { editor: LexicalEditor }) {
             {g.items.map((item, idx) => {
               const Render = item.render;
               return (
-                <span key={`${g.key}-${idx}`}>
+                <Fragment key={`${g.key}-${idx}`}>
                   <Render editor={activeEditor} />
-                </span>
+                </Fragment>
               );
             })}
             {i !== visible.length - 1 && <Divider />}
@@ -210,9 +210,9 @@ export function ToolbarContainer({ editor }: { editor: LexicalEditor }) {
                     {g.items.map((item, idx) => {
                       const Render = item.render;
                       return (
-                        <span key={`ov-${g.key}-${idx}`}>
+                        <Fragment key={`ov-${g.key}-${idx}`}>
                           <Render editor={activeEditor} />
-                        </span>
+                        </Fragment>
                       );
                     })}
                   </Group>
@@ -230,9 +230,9 @@ export function ToolbarContainer({ editor }: { editor: LexicalEditor }) {
             {g.items.map((item, idx) => {
               const Render = item.render;
               return (
-                <span key={`m-${g.key}-${idx}`}>
+                <Fragment key={`m-${g.key}-${idx}`}>
                   <Render editor={activeEditor} />
-                </span>
+                </Fragment>
               );
             })}
           </Group>
