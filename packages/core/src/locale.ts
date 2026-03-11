@@ -25,6 +25,7 @@ export const LOCALE: Record<string, Record<string, string>> = {
     uploadFail: "Upload failed. Please contact your administrator.",
     "Not an image file.": "Not an image file.",
     "Not a video file.": "Not a video file.",
+    "Compressing file...": "Compressing file...",
   },
   kr: {
     Paragraph: "\uB2E8\uB77D",
@@ -49,6 +50,7 @@ export const LOCALE: Record<string, Record<string, string>> = {
     uploadFail: "\uC5C5\uB85C\uB4DC\uC5D0 \uC2E4\uD328\uD558\uC600\uC2B5\uB2C8\uB2E4, \uAD00\uB9AC\uC790\uC5D0\uAC8C \uBB38\uC758\uD574\uC8FC\uC138\uC694.",
     "Not an image file.": "\uC774\uBBF8\uC9C0 \uD30C\uC77C\uC774 \uC544\uB2D9\uB2C8\uB2E4.",
     "Not a video file.": "\uBE44\uB514\uC624 \uD30C\uC77C\uC774 \uC544\uB2D9\uB2C8\uB2E4.",
+    "Compressing file...": "\uD30C\uC77C \uC555\uCD95\uC911...",
   },
   ja: {
     Paragraph: "\u6BB5\u843D",
@@ -73,6 +75,7 @@ export const LOCALE: Record<string, Record<string, string>> = {
     uploadFail: "\u30A2\u30C3\u30D7\u30ED\u30FC\u30C9\u306B\u5931\u6557\u3057\u307E\u3057\u305F\u3002\u7BA1\u7406\u8005\u306B\u304A\u554F\u3044\u5408\u308F\u305B\u304F\u3060\u3055\u3044\u3002",
     "Not an image file.": "\u753B\u50CF\u30D5\u30A1\u30A4\u30EB\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002",
     "Not a video file.": "\u52D5\u753B\u30D5\u30A1\u30A4\u30EB\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002",
+    "Compressing file...": "\u30D5\u30A1\u30A4\u30EB\u5727\u7E2E\u4E2D...",
   },
 };
 
