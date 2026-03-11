@@ -30,6 +30,9 @@ importers:
       '@lexical/react':
         specifier: 0.34.0
         version: 0.34.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(yjs@13.6.29)
+      '@react-easy-editor/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       lexical:
         specifier: 0.34.0
         version: 0.34.0
