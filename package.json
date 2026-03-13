@@ -12,7 +12,8 @@
     "overrides": {
       "react": "^19.1.0",
       "react-dom": "^19.1.0"
-    }
+    },
+    "onlyBuiltDependencies": ["esbuild"]
   },
   "devDependencies": {
     "prettier": "^3.7.4",
@@ -20,7 +21,7 @@
     "turbo": "^2.8.14",
     "typescript": "5.9.2"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.32.1",
   "engines": {
     "node": ">=18"
   }

@@ -160,7 +160,8 @@ export function ReactEasyEditor({
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countRef = useRef(0);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const { setIsLoading, setLocale } = useEditorStore();
+
   const [notFoundEditor, setNotFoundEditor] = useState(false);
   const [isOnReady, setIsOnReady] = useState(false);
 
@@ -247,24 +248,27 @@ export function ReactEasyEditor({
     checkReady();
   }, []);
 
-  // Sync language prop to global store so external components (e.g. TestHeader) can read it
+  // Sync language prop to global store (origin pattern)
   useEffect(() => {
-    useEditorStore.getState().setLocale(language);
-  }, [language]);
+    setLocale(language);
+  }, [language, setLocale]);
+
+  const storeIsLoading = useEditorStore((s) => s.isLoading);
+  const storeLocale = useEditorStore((s) => s.locale);
 
   const editorContextValue = useMemo(
     () =>
       editorRef.current
         ? {
             editor: editorRef.current,
-            locale: language,
+            locale: storeLocale,
             toast,
             saveServerFetcher: saveServerFetcher ? handleSaveServerFetcher : undefined,
-            isLoading,
+            isLoading: storeIsLoading,
             setIsLoading,
           }
         : null,
-    [editorRef.current, language, isLoading, saveServerFetcher],
+    [editorRef.current, storeLocale, storeIsLoading, saveServerFetcher],
   );
 
   return !notFoundEditor ? (
