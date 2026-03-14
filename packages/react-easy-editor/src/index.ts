@@ -111,4 +111,4 @@ export { VideoPlugin, VideoNode } from "@react-easy-editor/video";
 export type { VideoPayload } from "@react-easy-editor/video";
 
 // ── @react-easy-editor/table ──
-export { TablePlugin } from "@react-easy-editor/table";
+export { TablePlugin, StyledTableNode, StyledTableRowNode, StyledTableCellNode } from "@react-easy-editor/table";

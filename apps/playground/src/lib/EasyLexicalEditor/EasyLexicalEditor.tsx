@@ -34,14 +34,10 @@ import { ResizableImageNode } from "./nodes/ResizableImageNode.tsx";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import ImageDnDPlugin from "./plugins/image/ImageDnDPlugin.tsx";
 import PasteImagePlugin from "./plugins/image/PasteImagePlugin.tsx";
-import PasteTablePlugin from "./plugins/table/PasteTablePlugin.tsx";
-
 import ResizableTablePlugin from "./plugins/table/ResizableTablePlugin.tsx";
 import { buildInlineStyleImportMap } from "./utils/editorImporter.ts";
 import { whitelistStylesExportDOM } from "./utils/editorExporter.ts";
-import { StyledTableNode } from "./nodes/table/StyledTableNode.ts";
-import { StyledTableRowNode } from "./nodes/table/StyledTableRowNode.ts";
-import { StyledTableCellNode } from "./nodes/table/StyledTableCellNode.ts";
+import { StyledTableNode, StyledTableRowNode, StyledTableCellNode, PasteTableHandler } from "@react-easy-editor/table";
 import LoadingCover from "./components/common/LoadingCover.tsx";
 import { Toasts } from "./components/common/Toasts.tsx";
 import { useEditorStore } from "./store/editorStore.ts";
@@ -80,14 +76,14 @@ interface EasyLexicalEditorProps {
 
 export default function EasyLexicalEditor({
   showTerminal,
-  placeholder = "\uB0B4\uC6A9\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694.",
+  placeholder = "내용을 입력해주세요.",
   onChange,
   editorInnerStyle,
   editorInnerWidth,
   editorInnerHeight = "500px",
   saveServerFetcher,
   toastShowingDuration,
-  uploadFailMessage = `\uC5C5\uB85C\uB4DC\uC5D0 \uC2E4\uD328\uD558\uC600\uC2B5\uB2C8\uB2E4, \uAD00\uB9AC\uC790\uC5D0\uAC8C \uBB38\uC758\uD574\uC8FC\uC138\uC694.`,
+  uploadFailMessage = "업로드에 실패하였습니다, 관리자에게 문의해주세요.",
   isToastAutoHidden,
   textBgColors,
   textColors,
@@ -219,7 +215,7 @@ export default function EasyLexicalEditor({
             <HistoryPlugin />
             <AutoFocusPlugin />
             <ResizableTablePlugin editor={editorRef.current} />
-            <PasteTablePlugin editor={editorRef.current} />
+            <PasteTableHandler editor={editorRef.current} />
             <CaretColorPlugin editor={editorRef.current} />
 
             <ImageDnDPlugin

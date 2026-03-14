@@ -42,7 +42,7 @@ import { EditorProvider } from "./EditorContext";
 import { ToolbarProvider } from "./ToolbarContext";
 import { LOCALE } from "./locale";
 
-import type { LexicalEditor, EditorState, SerializedEditorState, Klass, LexicalNode, DOMExportOutput } from "lexical";
+import type { LexicalEditor, EditorState, SerializedEditorState, Klass, LexicalNode, LexicalNodeReplacement, DOMExportOutput } from "lexical";
 import type { CSSProperties } from "react";
 import type { PluginConfig, ToolbarItemConfig, EditorLocale, EasyEditorInstance } from "./types";
 
@@ -115,8 +115,24 @@ export function ReactEasyEditor({
   // Collect nodes from all plugins and merge with base nodes
   const allNodes = useMemo(() => {
     const pluginNodes = plugins.flatMap((p) => p.nodes || []);
-    const nodeSet = new Set<Klass<LexicalNode>>([...BASE_NODES, ...pluginNodes]);
-    return [...nodeSet];
+
+    // Separate Klass entries from LexicalNodeReplacement entries
+    const klassEntries: Klass<LexicalNode>[] = [];
+    const replacementEntries: LexicalNodeReplacement[] = [];
+    for (const entry of pluginNodes) {
+      if (typeof entry === "function") {
+        klassEntries.push(entry);
+      } else {
+        replacementEntries.push(entry);
+      }
+    }
+
+    // Deduplicate Klass entries, excluding any that are targets of replacements
+    const replacedTypes = new Set(replacementEntries.map((r) => r.replace));
+    const baseFiltered = BASE_NODES.filter((k) => !replacedTypes.has(k));
+    const klassSet = new Set<Klass<LexicalNode>>([...baseFiltered, ...klassEntries]);
+
+    return [...klassSet, ...replacementEntries];
   }, [plugins]);
 
   // Collect and sort toolbar items from all plugins

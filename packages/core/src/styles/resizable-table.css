@@ -1,3 +1,39 @@
+/* ------------------------------------------------------------------ */
+/*  Base table styles                                                  */
+/* ------------------------------------------------------------------ */
+
+.editor-input table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: max-content;
+    margin: 4px 0;
+}
+
+.editor-input table td,
+.editor-input table th {
+    border: 1px solid #d1d5db;
+    padding: 6px 8px;
+    min-width: 60px;
+    vertical-align: top;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.editor-input table th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+}
+
+.editor-input table td:focus-within,
+.editor-input table th:focus-within {
+    outline: 2px solid #4a90d9;
+    outline-offset: -2px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Resizable table overlay & toolbar                                  */
+/* ------------------------------------------------------------------ */
+
 .lex-table-overlay {
     position: absolute;
     pointer-events: none;

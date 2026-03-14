@@ -1,4 +1,4 @@
-import type { Klass, LexicalNode, LexicalEditor } from "lexical";
+import type { Klass, LexicalNode, LexicalEditor, LexicalNodeReplacement } from "lexical";
 import type { ReactNode } from "react";
 
 export type EditorLocale = "en" | "kr" | "ja";
@@ -28,7 +28,7 @@ export interface ToolbarItemConfig {
 
 export interface PluginConfig {
   name: string;
-  nodes?: Klass<LexicalNode>[];
+  nodes?: (Klass<LexicalNode> | LexicalNodeReplacement)[];
   toolbar?: ToolbarItemConfig | ToolbarItemConfig[];
   component?: React.ComponentType<{ editor: LexicalEditor }>;
   onInit?: (editor: LexicalEditor) => void;

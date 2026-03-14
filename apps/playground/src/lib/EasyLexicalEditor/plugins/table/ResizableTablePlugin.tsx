@@ -1,8 +1,7 @@
 // ResizableTablePlugin.tsx
 import { useEffect, useRef } from "react";
 import { $getNodeByKey, $getSelection, $isRangeSelection } from "lexical";
-import { StyledTableCellNode } from "../../nodes/table/StyledTableCellNode.ts";
-import { StyledTableRowNode } from "../../nodes/table/StyledTableRowNode.ts";
+import { StyledTableCellNode, StyledTableRowNode } from "@react-easy-editor/table";
 import { ensureOverlayEditToolbar } from "../../utils/elementCreator/resizableTable.ts";
 
 import type { LexicalEditor } from "lexical";
